@@ -97,7 +97,7 @@ function activateProjectTab(button){if(!button)return;const target=document.getE
 projectTabs.forEach((button,index)=>{button.addEventListener('click',()=>activateProjectTab(button));button.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?projectTabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+projectTabs.length)%projectTabs.length;projectTabs[next].focus();activateProjectTab(projectTabs[next]);});});
 if(projectTabs.length)activateProjectTab(projectTabs.find(tab=>tab.getAttribute('aria-selected')==='true')||projectTabs[0]);
 document.getElementById('year').textContent=new Date().getFullYear();
-document.getElementById('budget-form').addEventListener('submit',e=>{e.preventDefault();let ids=['project','down','monthly','purpose'];let values=ids.map(id=>document.getElementById(id).value);let body='Hola, quiero una asesoría sobre las opciones inmobiliarias.\n\nDesarrollo: '+values[0]+'\nEnganche: '+values[1]+'\nMensualidad: '+values[2]+'\nObjetivo: '+values[3]+'\n';window.open('https://wa.me/524441966053?text='+encodeURIComponent(body),'_blank','noopener,noreferrer');});
+
 const mittahPhotos=[...document.querySelectorAll('#galeria-mittah [data-photo]')];const lightbox=document.getElementById('mittah-lightbox');let photoIndex=0;function showMittahPhoto(i){photoIndex=(i+mittahPhotos.length)%mittahPhotos.length;const tile=mittahPhotos[photoIndex];lightbox.querySelector('img').src=tile.querySelector('img').src;lightbox.querySelector('img').alt=tile.querySelector('img').alt;lightbox.querySelector('.photo-caption').textContent=tile.querySelector('span').textContent;}mittahPhotos.forEach((tile,i)=>tile.addEventListener('click',()=>{showMittahPhoto(i);if(typeof lightbox.showModal==='function'){lightbox.showModal();}else{lightbox.setAttribute('open','');}}));lightbox.querySelector('.close-photo').addEventListener('click',()=>lightbox.close());lightbox.querySelector('.photo-prev').addEventListener('click',()=>showMittahPhoto(photoIndex-1));lightbox.querySelector('.photo-next').addEventListener('click',()=>showMittahPhoto(photoIndex+1));lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.close();});lightbox.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')showMittahPhoto(photoIndex-1);if(e.key==='ArrowRight')showMittahPhoto(photoIndex+1);});\n
 
 
@@ -110,6 +110,20 @@ const villaPhotos=[...document.querySelectorAll('[data-villa-photo]')];
 const villaLightbox=document.getElementById('villa-lightbox');
 if(villaLightbox && villaPhotos.length){let villaIndex=0;const showVillaPhoto=(i)=>{villaIndex=(i+villaPhotos.length)%villaPhotos.length;const img=villaPhotos[villaIndex].querySelector('img');villaLightbox.querySelector('img').src=img.src;villaLightbox.querySelector('img').alt=img.alt;villaLightbox.querySelector('.photo-caption').textContent=img.alt;};villaPhotos.forEach((tile,i)=>tile.addEventListener('click',()=>{showVillaPhoto(i);if(typeof villaLightbox.showModal==='function')villaLightbox.showModal();else villaLightbox.setAttribute('open','');}));villaLightbox.querySelector('.close-photo').addEventListener('click',()=>villaLightbox.close());villaLightbox.querySelector('.photo-prev').addEventListener('click',()=>showVillaPhoto(villaIndex-1));villaLightbox.querySelector('.photo-next').addEventListener('click',()=>showVillaPhoto(villaIndex+1));villaLightbox.addEventListener('click',e=>{if(e.target===villaLightbox)villaLightbox.close()});villaLightbox.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')showVillaPhoto(villaIndex-1);if(e.key==='ArrowRight')showVillaPhoto(villaIndex+1)});}
 
+})();
+</script><script>
+/* Formulario de presupuesto: independiente de las galerías y demás módulos. */
+(function(){
+const form=document.getElementById('budget-form');
+if(!form)return;
+form.addEventListener('submit',function(event){
+ event.preventDefault();
+ const fields=['project','down','monthly','purpose'];
+ const values=fields.map(id=>document.getElementById(id)?.value||'');
+ const message='Hola, quiero una asesoría sobre las opciones inmobiliarias.\\n\\nDesarrollo: '+values[0]+'\\nEnganche: '+values[1]+'\\nMensualidad: '+values[2]+'\\nObjetivo: '+values[3];
+ const url='https://wa.me/524441966053?text='+encodeURIComponent(message);
+ window.location.href=url;
+});
 })();
 </script><script>
 /* Galería independiente: funciona incluso si otros módulos fallan. */
